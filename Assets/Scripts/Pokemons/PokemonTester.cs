@@ -1,27 +1,32 @@
 using UniDex.Pokemons.API;
 using UniDex.Pokemons.API.Data;
+using UniDex.UI;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace UniDex.Pokemons
 {
     public class PokemonTester : MonoBehaviour
     {
         [SerializeField]
-        private uint pokemonId;
+        private uint limit;
+        [SerializeField]
+        private UIDocument uiDocument;
 
-        private async void Start()
+        private async void OnEnable()
         {
             // var result = await PokemonAPI.GetPokemon(pokemonId);
-            var result = await PokemonAPI.GetAllPokemonSpecies(limit: 20);
+            var result = await PokemonAPI.GetAllPokemons(limit);
 
             if (result.resultType == PokemonAPIResultType.Error)
             {
                 throw new System.Exception(result.error);
             }
 
-            foreach (var species in result.data)
+            foreach (var pokemonData in result.data)
             {
-                Debug.Log(species.name);
+                var pokemonSlot = new PokemonSlot(pokemonData);
+                uiDocument.rootVisualElement.Q("PokemonContainer").Add(pokemonSlot);
             }
         }
     }

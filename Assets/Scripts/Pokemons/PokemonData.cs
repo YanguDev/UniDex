@@ -1,20 +1,29 @@
+using System.Threading.Tasks;
+using UniDex.Pokemons.API.Data;
+using UnityEngine;
+
 namespace UniDex.Pokemons
 {
     public struct PokemonData
     {
-        public int id;
-        public string name;
-        public PokemonSpriteURLs sprites;
+        public int ID { get; private set; }
+        public string Name { get; private set; }
+        public Texture Texture { get; private set; }
+
+        public static async Task<PokemonData> FromPokemonSpecies(PokemonSpecies pokemonSpecies)
+        {
+            var texture = await TextureDownloader.DownloadFromURL(pokemonSpecies.sprites.front_default);
+            return new PokemonData()
+            {
+                ID = pokemonSpecies.id,
+                Name = pokemonSpecies.name,
+                Texture = texture
+            };
+        }
 
         public override string ToString()
         {
-            return $"{id}: {name} {sprites.front_default}";
-        }
-
-        public struct PokemonSpriteURLs
-        {
-            public string front_default;
-            public string front_shiny;
+            return $"{ID}: {Name}";
         }
     }
 }

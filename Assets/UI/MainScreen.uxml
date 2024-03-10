@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Main.uss?fileID=7433441132597879392&amp;guid=af60d434dbedaf24cb58aa8b193c63f7&amp;type=3#Main" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Art/Sprites/PokedexBackground.jpeg?fileID=2800000&amp;guid=73331b267d11db146990c7bae80b7c5d&amp;type=3#PokedexBackground&apos;); -unity-background-scale-mode: scale-and-crop;">
+        <ui:VisualElement name="Navbar" style="flex-grow: 0; height: 48px; background-color: rgba(243, 243, 243, 0.67); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-color: rgba(255, 255, 255, 0.79); flex-shrink: 0; flex-direction: row;" />
+        <ui:ScrollView name="PokemonContainer" vertical-scroller-visibility="Auto" style="flex-direction: row; flex-wrap: wrap; justify-content: space-between; flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

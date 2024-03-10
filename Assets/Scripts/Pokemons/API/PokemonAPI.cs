@@ -12,53 +12,67 @@ namespace UniDex.Pokemons.API
     {
         private const string BASE_URL = "https://pokeapi.co/api/v2/";
 
-        public static async Task<PokemonAPIResult<PokemonSpecies[]>> GetAllPokemonSpecies(uint limit = 10000, uint offset = 0)
+        private static Dictionary<string, PokemonData> pokemonCacheByName = new Dictionary<string, PokemonData>();
+
+        public static async Task<PokemonAPIResult<PokemonData[]>> GetAllPokemons(uint limit = 10000, uint offset = 0)
         {
-            var speciesCollectionResult = await GetAPIData<PokemonSpeciesCollection>($"pokemon-species?limit={limit}&offset={offset}");
+            var speciesCollectionResult = await GetAPIData<PokemonSpeciesCollection>($"pokemon?limit={limit}&offset={offset}");
 
             if (speciesCollectionResult.resultType == PokemonAPIResultType.Error)
             {
-                return new PokemonAPIResult<PokemonSpecies[]>(speciesCollectionResult.error);
+                return new PokemonAPIResult<PokemonData[]>(speciesCollectionResult.error);
             }
 
-            var pokemonSpecies = new List<PokemonSpecies>();
-            IEnumerable<string> pokemonNames = speciesCollectionResult.data.results.Select(result => result.name);
-            foreach (string pokemonName in pokemonNames)
+            var speciesCollection = speciesCollectionResult.data;
+            var pokemonSpeciesTasks = new Task<PokemonAPIResult<PokemonData>>[speciesCollection.results.Length];
+            for (int i = 0; i < pokemonSpeciesTasks.Length; i++)
             {
-                var speciesResult = await GetPokemonSpecies(pokemonName);
+                string pokemonName = speciesCollection.results[i].name;
+                pokemonSpeciesTasks[i] = GetPokemonData(pokemonName);
+            }
 
-                if (speciesResult.resultType == PokemonAPIResultType.Error)
+            await Task.WhenAll(pokemonSpeciesTasks);
+
+            foreach (var task in pokemonSpeciesTasks)
+            {
+                if (task.Result.resultType == PokemonAPIResultType.Error)
                 {
-                    return new PokemonAPIResult<PokemonSpecies[]>(speciesResult.error);
+                    return new PokemonAPIResult<PokemonData[]>(task.Result.error);
+                }
+            }
+
+            PokemonData[] pokemonSpeciesArray = pokemonSpeciesTasks.Select(task => task.Result.data).ToArray();
+            return new PokemonAPIResult<PokemonData[]>(pokemonSpeciesArray);
+        }
+
+        public static async Task<PokemonAPIResult<PokemonData>> GetPokemonData(string pokemonName)
+        {
+            if (!pokemonCacheByName.TryGetValue(pokemonName, out PokemonData pokemonData))
+            {
+                var result = await GetAPIData<PokemonSpecies>($"pokemon/{pokemonName}");
+                if (result.resultType == PokemonAPIResultType.Error)
+                {
+                    return new PokemonAPIResult<PokemonData>(result.error);
                 }
 
-                pokemonSpecies.Add(speciesResult.data);
+                pokemonData = await PokemonData.FromPokemonSpecies(result.data);
+                pokemonCacheByName.Add(pokemonName, pokemonData);
             }
 
-            return new PokemonAPIResult<PokemonSpecies[]>(pokemonSpecies.ToArray());
-        }
-
-        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpecies(uint pokemonID)
-        {
-            return await GetAPIData<PokemonSpecies>($"pokemon-species/{pokemonID}");
-        }
-
-        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpecies(string pokemonName)
-        {
-            return await GetAPIData<PokemonSpecies>($"pokemon-species/{pokemonName}");
+            return new PokemonAPIResult<PokemonData>(pokemonData);
         }
 
         private static async Task<PokemonAPIResult<T>> GetAPIData<T>(string endpoint)
         {
             using (UnityWebRequest webRequest = CreateEndpointRequest(endpoint))
             {
-                var asyncOperation = webRequest.SendWebRequest();
+                UnityWebRequestAsyncOperation asyncOperation = webRequest.SendWebRequest();
                 while (!asyncOperation.isDone)
                 {
                     await Task.Yield();
                 }
 
-                if (!IsRequestSuccessful(webRequest))
+                if (!webRequest.IsSuccessful())
                 {
                     return new PokemonAPIResult<T>(webRequest.error);
                 }
@@ -72,13 +86,6 @@ namespace UniDex.Pokemons.API
         private static UnityWebRequest CreateEndpointRequest(string apiEndpoint)
         {
             return UnityWebRequest.Get($"{BASE_URL}{apiEndpoint}");
-        }
-
-        private static bool IsRequestSuccessful(UnityWebRequest webRequest)
-        {
-            return webRequest.result != UnityWebRequest.Result.ConnectionError
-                && webRequest.result != UnityWebRequest.Result.ProtocolError
-                && webRequest.result != UnityWebRequest.Result.DataProcessingError;
         }
     }
 }
