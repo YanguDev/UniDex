@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 
 namespace UniDex.Pokemons.API.Data
 {
-    public struct PokemonSpeciesCollection
+    public struct PokemonCollection
     {
         public int count;
-        public PokemonSpeciesResult[] results;
+        public PokemonResult[] results;
 
-        public struct PokemonSpeciesResult
+        public struct PokemonResult
         {
             public string name;
             public string url;

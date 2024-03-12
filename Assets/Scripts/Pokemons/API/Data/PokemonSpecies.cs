@@ -1,20 +1,28 @@
 namespace UniDex.Pokemons.API.Data
 {
-    public class PokemonSpecies
+    public struct PokemonSpecies
     {
-        public int id;
-        public string name;
-        public PokemonSpriteURLs sprites;
-
-        public override string ToString()
+        public uint id;
+        public Name[] names;
+        public FlavorTextEntry[] flavor_text_entries;
+        public Genus[] genera;
+        
+        public struct FlavorTextEntry
         {
-            return $"{id}: {name} {sprites.front_default}";
+            public string flavor_text;
+            public Language language;
         }
 
-        public struct PokemonSpriteURLs
+        public struct Genus
         {
-            public string front_default;
-            public string front_shiny;
+            public string genus;
+            public Language language;
+        }
+
+        public struct Name
+        {
+            public string name;
+            public Language language;
         }
     }
 }

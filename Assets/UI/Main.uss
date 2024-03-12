@@ -38,10 +38,9 @@ PokemonSlot {
     -unity-font-style: bold;
     -unity-text-align: middle-center;
     transition: all;
-    transition-duration: 0.1s;
+    transition-duration: 0.2s;
     width: 160px;
     height: 160px;
-    justify-self: left;
 }
 
 PokemonSlot:hover {
