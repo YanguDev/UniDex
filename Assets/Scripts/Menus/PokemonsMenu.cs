@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UniDex.Pokemons;
 using UniDex.Pokemons.API;
 using UniDex.UI;
@@ -23,19 +24,17 @@ namespace UniDex.Menus
 
         private async void OnEnable()
         {
-            var result = await PokemonAPI.GetAllPokemons(pokemonLimit);
-
-            if (result.resultType == PokemonAPIResultType.Error)
+            while (!PokemonManager.Instance.IsPokemonFetchCompleted)
             {
-                throw new System.Exception(result.error);
+                await Task.Yield();
             }
             
-            CreatePokemonSlots(result.data);
+            CreatePokemonSlots();
         }
 
-        private void CreatePokemonSlots(PokemonObject[] pokemonObjects)
+        private void CreatePokemonSlots()
         {
-            foreach (var pokemonObject in pokemonObjects)
+            foreach (PokemonObject pokemonObject in PokemonManager.Instance.AllPokemons.Values)
             {
                 var pokemonSlot = new PokemonSlot(pokemonObject, OpenPokemonDetails);
                 PokemonContainerElement.Add(pokemonSlot);

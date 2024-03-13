@@ -6,10 +6,10 @@ namespace UniDex.Pokemons.API.Data
         public string name;
         public int weight;
         public int height;
-        public PokemonSpritesURLs sprites;
+        public PokemonSprites sprites;
         public PokemonSpecies species;
 
-        public struct PokemonSpritesURLs
+        public struct PokemonSprites
         {
             public string front_default;
             public string front_shiny;

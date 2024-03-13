@@ -1,9 +1,6 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UniDex.Pokemons.API.Data;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace UniDex.Pokemons.API
@@ -11,76 +8,47 @@ namespace UniDex.Pokemons.API
     public static class PokemonAPI
     {
         private const string BASE_URL = "https://pokeapi.co/api/v2/";
-
-        private static Dictionary<string, PokemonObject> pokemonCacheByName = new Dictionary<string, PokemonObject>();
-
         
-        /// <returns>Result containing useful information about all Pokemons by combining multiple API endpoint results.</returns>
-        public static async Task<PokemonAPIResult<PokemonObject[]>> GetAllPokemons(uint limit = 10000, uint offset = 0)
+        /// <returns>Resource list of all available pokemons.</returns>
+        public static async Task<PokemonAPIResult<NamedAPIResourceList>> GetPokemonList(uint limit = 10000, uint offset = 0)
         {
-            var speciesCollectionResult = await GetAPIData<PokemonCollection>($"pokemon?limit={limit}&offset={offset}");
-
-            if (speciesCollectionResult.resultType == PokemonAPIResultType.Error)
-            {
-                return new PokemonAPIResult<PokemonObject[]>(speciesCollectionResult.error);
-            }
-
-            var speciesCollection = speciesCollectionResult.data;
-            var pokemonSpeciesTasks = new Task<PokemonAPIResult<PokemonObject>>[speciesCollection.results.Length];
-            for (int i = 0; i < pokemonSpeciesTasks.Length; i++)
-            {
-                string pokemonName = speciesCollection.results[i].name;
-                pokemonSpeciesTasks[i] = GetPokemon(pokemonName);
-            }
-
-            await Task.WhenAll(pokemonSpeciesTasks);
-
-            foreach (var task in pokemonSpeciesTasks)
-            {
-                if (task.Result.resultType == PokemonAPIResultType.Error)
-                {
-                    return new PokemonAPIResult<PokemonObject[]>(task.Result.error);
-                }
-            }
-
-            PokemonObject[] pokemonSpeciesArray = pokemonSpeciesTasks.Select(task => task.Result.data).ToArray();
-            return new PokemonAPIResult<PokemonObject[]>(pokemonSpeciesArray);
+            return await GetAPIData<NamedAPIResourceList>($"pokemon?limit={limit}&offset={offset}");
         }
 
-        /// <returns>Result containing useful information about a Pokemon by combining multiple API endpoint results.</returns>
-        public static async Task<PokemonAPIResult<PokemonObject>> GetPokemon(string pokemonName)
+        /// <returns>Resource list of all available Pokemon Species.</returns>
+        public static async Task<PokemonAPIResult<NamedAPIResourceList>> GetPokemonSpeciesList(string pokemonName)
         {
-            if (!pokemonCacheByName.TryGetValue(pokemonName, out PokemonObject pokemonData))
-            {
-                var pokemonResult = await GetPokemonAPI(pokemonName);
-                if (pokemonResult.resultType == PokemonAPIResultType.Error)
-                {
-                    return new PokemonAPIResult<PokemonObject>($"{pokemonResult.error} Resource: pokemon-{pokemonName}");
-                }
-
-                var pokemonSpeciesResult = await GetPokemonSpeciesAPI(pokemonName);
-                if (pokemonSpeciesResult.resultType == PokemonAPIResultType.Error)
-                {
-                    return new PokemonAPIResult<PokemonObject>($"{pokemonSpeciesResult.error} Resource: pokemon-species-{pokemonName}");
-                }
-
-                pokemonData = await PokemonObject.FromAPIData(pokemonResult.data, pokemonSpeciesResult.data);
-                pokemonCacheByName.Add(pokemonName, pokemonData);
-            }
-
-            return new PokemonAPIResult<PokemonObject>(pokemonData);
+            return await GetAPIData<NamedAPIResourceList>($"pokemon-species/{pokemonName}");
         }
 
-        /// <returns>Result containing Pokemon representation exactly as defined by JSON.</returns>
-        public static async Task<PokemonAPIResult<Pokemon>> GetPokemonAPI(string pokemonName)
+        /// <returns>Information about a Pokemon with provided name or ID.</returns>
+        public static async Task<PokemonAPIResult<Pokemon>> GetPokemon(string pokemonNameOrID)
         {
-            return await GetAPIData<Pokemon>($"pokemon/{pokemonName}");
+            return await GetAPIData<Pokemon>($"pokemon/{pokemonNameOrID}");
         }
 
-        /// <returns>Result containing Pokemon Species representation exactly as defined by JSON.</returns>
-        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpeciesAPI(string pokemonName)
+        /// <returns>Information about a Pokemon with provided ID.</returns>
+        public static async Task<PokemonAPIResult<Pokemon>> GetPokemon(uint pokemonID)
         {
-            return await GetAPIData<PokemonSpecies>($"pokemon-species/{pokemonName}");
+            return await GetPokemon(pokemonID.ToString());
+        }
+
+        /// <returns>Information about a Pokemon species with provided name or ID.</returns>
+        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpecies(string pokemonNameOrID)
+        {
+            return await GetAPIData<PokemonSpecies>($"pokemon-species/{pokemonNameOrID}");
+        }
+
+        /// <returns>Information about a Pokemon species with provided ID.</returns>
+        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpecies(uint pokemonID)
+        {
+            return await GetPokemonSpecies(pokemonID.ToString());
+        }
+
+        /// <returns>Information about a Pokemon species with provided Pokemon.</returns>
+        public static async Task<PokemonAPIResult<PokemonSpecies>> GetPokemonSpecies(Pokemon pokemon)
+        {
+            return await GetPokemonSpecies(pokemon.species.name);
         }
 
         private static async Task<PokemonAPIResult<T>> GetAPIData<T>(string endpoint)

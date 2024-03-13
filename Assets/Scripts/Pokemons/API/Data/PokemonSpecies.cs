@@ -4,10 +4,10 @@ namespace UniDex.Pokemons.API.Data
     {
         public uint id;
         public Name[] names;
-        public FlavorTextEntry[] flavor_text_entries;
+        public FlavorText[] flavor_text_entries;
         public Genus[] genera;
         
-        public struct FlavorTextEntry
+        public struct FlavorText
         {
             public string flavor_text;
             public Language language;
