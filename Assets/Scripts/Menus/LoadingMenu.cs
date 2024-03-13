@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UniDex.Pokemons;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UniDex.Menus
 {
@@ -10,31 +9,54 @@ namespace UniDex.Menus
     {
         [SerializeField]
         private TMP_Text loadingText;
+        [SerializeField]
+        private Button retryButton;
+        [SerializeField]
+        private GameObject loadingIndicator;
 
         public override void Open()
         {
             base.Open();
 
-            PokemonManager.Instance.OnPokemonFetchCompleted += OnPokemonsLoaded;
-            PokemonManager.Instance.OnPokemonFetchingProgressChanged += OnLoadingProgressChanged;
+            loadingIndicator.SetActive(true);
+            retryButton.gameObject.SetActive(false);
 
-            if (PokemonManager.Instance.IsPokemonFetchCompleted)
-            {
-                OnPokemonsLoaded();
-            }
+            PokemonManager.Instance.OnPokemonFetchCompleted += OnPokemonsFetchCompleted;
+            PokemonManager.Instance.OnPokemonFetchingProgressChanged += OnLoadingProgressChanged;
+            retryButton.onClick.AddListener(Retry);
+
+            PokemonManager.Instance.FetchPokemons();
         }
 
         public override void Close()
         {
-            PokemonManager.Instance.OnPokemonFetchCompleted -= OnPokemonsLoaded;
+            PokemonManager.Instance.OnPokemonFetchCompleted -= OnPokemonsFetchCompleted;
             PokemonManager.Instance.OnPokemonFetchingProgressChanged -= OnLoadingProgressChanged;
+            retryButton.onClick.RemoveListener(Retry);
 
             base.Close();
         }
 
-        private void OnPokemonsLoaded()
+        private void OnPokemonsFetchCompleted(bool success)
         {
-            MenuManager.Instance.SwitchMenu<PokemonsMenu>();
+            if (success)
+            {
+                MenuManager.Instance.SwitchMenu<PokemonsMenu>();
+            }
+            else
+            {
+                loadingText.text = "Failed to get the pokemons - Ensure the device has access to internet connection";
+                retryButton.gameObject.SetActive(true);
+                loadingIndicator.SetActive(false);
+            }
+        }
+
+        private void Retry()
+        {
+            loadingText.text = "Loading Pokemons";
+            retryButton.gameObject.SetActive(false);
+            loadingIndicator.SetActive(true);
+            PokemonManager.Instance.FetchPokemons();
         }
 
         private void OnLoadingProgressChanged(int current, int total)

@@ -26,28 +26,38 @@ namespace UniDex.Pokemons
         /// </summary>
         public ReadOnlyDictionary<int, PokemonObject> AllPokemons => new ReadOnlyDictionary<int, PokemonObject>(allPokemons);
         /// <summary>
-        /// Whether the Pokemons were successfully received through the API
+        /// Whether the Pokemons fetching is finished, no matter if successful or not.
         /// </summary>
         public bool IsPokemonFetchCompleted { get; private set; }
+        /// <summary>
+        /// Whether the Pokemons are currently being received through the API
+        /// </summary>
+        public bool IsPokemonFetchingInProgress { get; private set; }
 
         /// <summary>
         /// Event called when one pack of simultaneous API calls is finished. Provides amount of currently loaded Pokemons, and total Pokemons to load.
         /// </summary>
         public event Action<int, int> OnPokemonFetchingProgressChanged;
         /// <summary>
-        /// Event called when all Pokemons are fetched successfully.
+        /// Event called when fetching call completes. It provides a boolean determining whether the fetch was successful or not.
         /// </summary>
-        public event Action OnPokemonFetchCompleted;
+        public event Action<bool> OnPokemonFetchCompleted;
 
-        protected override async void Awake()
+        public async void FetchPokemons()
         {
-            base.Awake();
-            
+            if (IsPokemonFetchingInProgress)
+            {
+                Debug.LogWarning("Pokemons are already being fetched");
+                return;
+            }
+
+            IsPokemonFetchingInProgress = true;
             var pokemonListResult = await PokemonAPI.GetPokemonList(limit);
 
             if (pokemonListResult.IsError)
             {
-                throw new Exception(pokemonListResult.Error);
+                FinishFetchingWithError(pokemonListResult.Error);
+                return;
             }
 
             NamedAPIResource[] pokemonList = pokemonListResult.Data.results;
@@ -57,28 +67,48 @@ namespace UniDex.Pokemons
             {
                 int apiCallsAmount = throttle == throttlesAmount - 1 ? pokemonList.Length - throttle * maxSimultaneousAPICalls : maxSimultaneousAPICalls;
                 Task<PokemonObject>[] pokemonObjectsTasks = new Task<PokemonObject>[apiCallsAmount];
-                for (int i = 0; i < apiCallsAmount; i++)
+                try
                 {
-                    int pokemonIndex = throttle * maxSimultaneousAPICalls + i;
-                    pokemonObjectsTasks[i] = PokemonFactory.CreatePokemonFromAPI(pokemonList[pokemonIndex].name);
-                }
-
-                PokemonObject[] pokemons = await Task.WhenAll(pokemonObjectsTasks);
-                foreach (PokemonObject pokemon in pokemons)
-                {
-                    if (!pokemon.Texture)
+                    for (int i = 0; i < apiCallsAmount; i++)
                     {
-                        pokemon.SetTexture(defaultPokemonTexture);
+                        int pokemonIndex = throttle * maxSimultaneousAPICalls + i;
+                        pokemonObjectsTasks[i] = PokemonFactory.CreatePokemonFromAPI(pokemonList[pokemonIndex].name);
                     }
 
-                    allPokemons.Add(pokemon.ID, pokemon);
-                }
+                    PokemonObject[] pokemons = await Task.WhenAll(pokemonObjectsTasks);
+                    foreach (PokemonObject pokemon in pokemons)
+                    {
+                        if (!pokemon.Texture)
+                        {
+                            pokemon.SetTexture(defaultPokemonTexture);
+                        }
 
-                OnPokemonFetchingProgressChanged?.Invoke(allPokemons.Count, pokemonList.Length);
+                        allPokemons.Add(pokemon.ID, pokemon);
+                    }
+
+                    OnPokemonFetchingProgressChanged?.Invoke(allPokemons.Count, pokemonList.Length);
+                }
+                catch (Exception exception)
+                {
+                    FinishFetchingWithError(exception.Message);
+                    return;
+                }
             }
 
             IsPokemonFetchCompleted = true;
-            OnPokemonFetchCompleted?.Invoke();
+            IsPokemonFetchingInProgress = false;
+
+            OnPokemonFetchCompleted?.Invoke(true);
+        }
+
+        private void FinishFetchingWithError(string error)
+        {
+            Debug.LogError(error);
+
+            IsPokemonFetchCompleted = true;
+            IsPokemonFetchingInProgress = false;
+
+            OnPokemonFetchCompleted?.Invoke(false);
         }
     }
 }

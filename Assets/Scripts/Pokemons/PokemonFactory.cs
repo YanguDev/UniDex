@@ -12,8 +12,7 @@ namespace UniDex.Pokemons
             var pokemonResult = await PokemonAPI.GetPokemon(pokemonNameOrID);
             if (pokemonResult.IsError)
             {
-                Debug.LogError($"Couldn't fetch Pokemon - {pokemonNameOrID}. Error: {pokemonResult.Error}");
-                return null;
+                throw new System.Exception($"Couldn't fetch Pokemon - {pokemonNameOrID}. Error: {pokemonResult.Error}");
             }
 
             Pokemon pokemon = pokemonResult.Data;
@@ -37,8 +36,7 @@ namespace UniDex.Pokemons
             var pokemonSpeciesResult = pokemonSpeciesTask.Result;
             if (pokemonSpeciesResult.IsError)
             {
-                Debug.LogError($"Couldn't fetch Pokemon Species - {pokemonNameOrID}. Error: {pokemonSpeciesResult.Error}");
-                return null;
+                throw new System.Exception($"Couldn't fetch Pokemon Species - {pokemonNameOrID}. Error: {pokemonSpeciesResult.Error}");
             }
 
             PokemonSpecies pokemonSpecies = pokemonSpeciesResult.Data;
