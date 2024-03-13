@@ -152,7 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d1adca7a3b0b4f9305690aea3720c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonLimit: 20
+  limit: 10000
+  maxSimultaneousAPICalls: 100
+  defaultPokemonTexture: {fileID: 2800000, guid: 2185d6b077371e34fa598c38e457cc62, type: 3}
 --- !u!4 &302858368
 Transform:
   m_ObjectHideFlags: 0
@@ -229,7 +231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bcee29df83f7014d926d684e7879a14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pokemonLimit: 10000
   uiDocument: {fileID: 378175761}
   pokemonContainerElementID: PokemonContainer
 --- !u!1 &519420028

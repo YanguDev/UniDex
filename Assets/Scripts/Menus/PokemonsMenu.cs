@@ -11,9 +11,6 @@ namespace UniDex.Menus
 {
     public class PokemonsMenu : Menu
     {
-        [Header("API")]
-        [SerializeField]
-        private uint pokemonLimit;
         [Header("UI")]
         [SerializeField]
         private UIDocument uiDocument;
@@ -28,7 +25,7 @@ namespace UniDex.Menus
             {
                 await Task.Yield();
             }
-            
+
             CreatePokemonSlots();
         }
 

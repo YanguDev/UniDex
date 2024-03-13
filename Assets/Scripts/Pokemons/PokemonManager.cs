@@ -11,7 +11,11 @@ namespace UniDex.Pokemons
     public class PokemonManager : MonoSingleton<PokemonManager>
     {
         [SerializeField]
-        private uint pokemonLimit;
+        private uint limit = 10000;
+        [SerializeField, Range(1, 300)]
+        private int maxSimultaneousAPICalls = 60;
+        [SerializeField]
+        private Texture defaultPokemonTexture;
 
         private Dictionary<int, PokemonObject> allPokemons = new Dictionary<int, PokemonObject>();
 
@@ -28,7 +32,7 @@ namespace UniDex.Pokemons
         {
             base.Awake();
             
-            var pokemonListResult = await PokemonAPI.GetPokemonList(pokemonLimit);
+            var pokemonListResult = await PokemonAPI.GetPokemonList(limit);
 
             if (pokemonListResult.IsError)
             {
@@ -36,16 +40,30 @@ namespace UniDex.Pokemons
             }
 
             NamedAPIResource[] pokemonList = pokemonListResult.Data.results;
-            Task<PokemonObject>[] pokemonObjectsTasks = new Task<PokemonObject>[pokemonList.Length];
-            for (int i = 0; i < pokemonList.Length; i++)
+            // Use throttling mechanism to limit API calls running at once to avoid SSL errors;
+            int throttlesAmount = Mathf.CeilToInt(pokemonList.Length / (float) maxSimultaneousAPICalls);
+            for (int throttle = 0; throttle < throttlesAmount; throttle++)
             {
-                pokemonObjectsTasks[i] = PokemonFactory.CreatePokemonFromAPI(pokemonList[i].name);
-            }
+                int apiCallsAmount = throttle == throttlesAmount - 1 ? pokemonList.Length % maxSimultaneousAPICalls : maxSimultaneousAPICalls;
+                Task<PokemonObject>[] pokemonObjectsTasks = new Task<PokemonObject>[apiCallsAmount];
+                for (int i = 0; i < apiCallsAmount; i++)
+                {
+                    int pokemonIndex = throttle * maxSimultaneousAPICalls + i;
+                    Debug.Log($"Getting pokemon {pokemonIndex}");
+                    pokemonObjectsTasks[i] = PokemonFactory.CreatePokemonFromAPI(pokemonList[pokemonIndex].name);
+                }
 
-            PokemonObject[] pokemons = await Task.WhenAll(pokemonObjectsTasks);
-            foreach (PokemonObject pokemon in pokemons)
-            {
-                allPokemons.Add(pokemon.ID, pokemon);
+                PokemonObject[] pokemons = await Task.WhenAll(pokemonObjectsTasks);
+                foreach (PokemonObject pokemon in pokemons)
+                {
+                    if (!pokemon.Texture)
+                    {
+                        pokemon.SetTexture(defaultPokemonTexture);
+                    }
+
+                    allPokemons.Add(pokemon.ID, pokemon);
+                }
+
             }
 
             IsPokemonFetchCompleted = true;

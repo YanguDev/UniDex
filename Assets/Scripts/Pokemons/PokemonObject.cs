@@ -6,8 +6,12 @@ using UnityEngine;
 
 namespace UniDex.Pokemons
 {
+    [System.Serializable]
     public class PokemonObject
     {
+        [SerializeField]
+        private Texture defaultTexture;
+        
         public int ID { get; private set; }
         public string Name { get; private set; }
         public Texture Texture { get; private set; }
@@ -20,10 +24,15 @@ namespace UniDex.Pokemons
         {
             ID = pokemon.id;
             Name = species.names.FirstOrDefault(name => name.language.name == "en").name;
-            FlavorText = species.flavor_text_entries.FirstOrDefault(entry => entry.language.name == "en").flavor_text.Replace("", " ");
+            FlavorText = species.flavor_text_entries.FirstOrDefault(entry => entry.language.name == "en").flavor_text?.Replace("", " ");
             Genus = species.genera.FirstOrDefault(genus => genus.language.name == "en").genus;
             Weight = $"{(float) pokemon.weight / 100} kg";
             Height = $"{(float) pokemon.height / 10} m";
+            Texture = texture;
+        }
+
+        public void SetTexture(Texture texture)
+        {
             Texture = texture;
         }
 
