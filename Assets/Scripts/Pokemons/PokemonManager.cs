@@ -55,7 +55,7 @@ namespace UniDex.Pokemons
             int throttlesAmount = Mathf.CeilToInt(pokemonList.Length / (float) maxSimultaneousAPICalls);
             for (int throttle = 0; throttle < throttlesAmount; throttle++)
             {
-                int apiCallsAmount = throttle == throttlesAmount - 1 ? pokemonList.Length % maxSimultaneousAPICalls : maxSimultaneousAPICalls;
+                int apiCallsAmount = throttle == throttlesAmount - 1 ? pokemonList.Length - throttle * maxSimultaneousAPICalls : maxSimultaneousAPICalls;
                 Task<PokemonObject>[] pokemonObjectsTasks = new Task<PokemonObject>[apiCallsAmount];
                 for (int i = 0; i < apiCallsAmount; i++)
                 {

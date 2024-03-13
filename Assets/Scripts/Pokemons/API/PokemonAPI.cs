@@ -16,9 +16,9 @@ namespace UniDex.Pokemons.API
         }
 
         /// <returns>Resource list of all available Pokemon Species.</returns>
-        public static async Task<PokemonAPIResult<NamedAPIResourceList>> GetPokemonSpeciesList(string pokemonName)
+        public static async Task<PokemonAPIResult<NamedAPIResourceList>> GetPokemonSpeciesList(uint limit = 10000, uint offset = 0)
         {
-            return await GetAPIData<NamedAPIResourceList>($"pokemon-species/{pokemonName}");
+            return await GetAPIData<NamedAPIResourceList>($"pokemon-species?limit={limit}&offset={offset}");
         }
 
         /// <returns>Information about a Pokemon with provided name or ID.</returns>
