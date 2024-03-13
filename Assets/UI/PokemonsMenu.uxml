@@ -1,7 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Main.uss?fileID=7433441132597879392&amp;guid=af60d434dbedaf24cb58aa8b193c63f7&amp;type=3#Main" />
     <ui:VisualElement name="Root" style="flex-grow: 1;">
-        <ui:VisualElement name="Navbar" style="flex-grow: 0; height: 48px; background-color: rgba(243, 243, 243, 0.67); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-color: rgba(255, 255, 255, 0.79); flex-shrink: 0; flex-direction: row;" />
+        <ui:VisualElement name="Navbar" style="flex-grow: 0; height: 48px; background-color: rgba(243, 243, 243, 0.67); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-color: rgba(255, 255, 255, 0.79); flex-shrink: 0; flex-direction: row; -unity-text-align: upper-left; justify-content: center;">
+            <ui:VisualElement name="SearchBarContainer" style="flex-grow: 1; min-width: auto; min-height: auto; max-width: 300px; justify-content: center;">
+                <ui:Label tabindex="-1" text="Search" parse-escape-sequences="true" display-tooltip-when-elided="true" style="position: absolute; left: -60px;" />
+                <ui:TextField picking-mode="Ignore" name="SearchInput" style="width: 100%; color: rgb(99, 99, 99);" />
+                <ui:Button text="X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ClearSearchButton" style="position: absolute; right: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: rgba(188, 188, 188, 0); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:ScrollView name="PokemonContainer" vertical-scroller-visibility="Auto" style="flex-direction: row; flex-wrap: wrap; justify-content: space-between; flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

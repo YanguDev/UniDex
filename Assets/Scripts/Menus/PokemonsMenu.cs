@@ -10,33 +10,45 @@ namespace UniDex.Menus
 {
     public class PokemonsMenu : Menu
     {
-        [Header("UI")]
         [SerializeField]
         private UIDocument uiDocument;
-        [SerializeField]
-        private string pokemonContainerElementID = "PokemonContainer";
 
         private List<PokemonObject> filteredPokemons;
         private Dictionary<PokemonObject, PokemonSlot> pokemonSlots = new Dictionary<PokemonObject, PokemonSlot>();
 
-        private VisualElement PokemonContainerElement => uiDocument.rootVisualElement.Q(pokemonContainerElementID);
+        private VisualElement PokemonContainer => uiDocument.rootVisualElement.Q(nameof(PokemonContainer));
         private ScrollView ScrollView => uiDocument.rootVisualElement.Q<ScrollView>();
+        private TextField SearchInput => uiDocument.rootVisualElement.Q<TextField>(nameof(SearchInput));
+        private Button ClearSearchButton => uiDocument.rootVisualElement.Q<Button>(nameof(ClearSearchButton));
+
+        private string searchTerm;
 
         public override async void Open()
         {
             base.Open();
+
+            ClearSearchButton.clicked += ClearSearch;
+            SearchInput.RegisterValueChangedCallback(OnSearchBarChanged);
+            
+            SearchInput.SetValueWithoutNotify(searchTerm);
+            RefreshClearButton();
 
             while (!PokemonManager.Instance.IsPokemonFetchCompleted)
             {
                 await Task.Yield();
             }
 
-            if (filteredPokemons == null)
-            {
-                filteredPokemons = PokemonManager.Instance.AllPokemons.Values.ToList();
-            }
+            filteredPokemons ??= PokemonManager.Instance.AllPokemons.Values.ToList();
 
             CreatePokemonSlots();
+        }
+
+        public override void Close()
+        {
+            ClearSearchButton.clicked -= ClearSearch;
+            SearchInput.UnregisterValueChangedCallback(OnSearchBarChanged);
+
+            base.Close();
         }
 
         public void ScrollTo(PokemonObject pokemonObject)
@@ -49,10 +61,11 @@ namespace UniDex.Menus
 
         private void CreatePokemonSlots()
         {
+            PokemonContainer.Clear();
             foreach (PokemonObject pokemonObject in filteredPokemons)
             {
                 var pokemonSlot = new PokemonSlot(pokemonObject, OpenPokemonDetails);
-                PokemonContainerElement.Add(pokemonSlot);
+                PokemonContainer.Add(pokemonSlot);
 
                 if (!pokemonSlots.ContainsKey(pokemonObject))
                 {
@@ -63,7 +76,6 @@ namespace UniDex.Menus
                     pokemonSlots[pokemonObject] = pokemonSlot;
                 }
             }
-
         }
 
         private void OpenPokemonDetails(PokemonObject pokemonObject)
@@ -71,6 +83,27 @@ namespace UniDex.Menus
             DetailsMenu detailsMenu = MenuManager.Instance.SwitchMenu<DetailsMenu>();
             detailsMenu.SetPokemonDetails(pokemonObject);
             detailsMenu.SetPokemonsContext(filteredPokemons, filteredPokemons.IndexOf(pokemonObject));
+        }
+
+        private void RefreshClearButton()
+        {
+            ClearSearchButton.visible = !string.IsNullOrEmpty(searchTerm);
+        }
+
+        private void OnSearchBarChanged(ChangeEvent<string> changeEvent)
+        {
+            searchTerm = changeEvent.newValue.ToLower();
+            RefreshClearButton();
+
+            filteredPokemons = PokemonManager.Instance.AllPokemons.Values.Where(pokemon => pokemon.Name.ToLower().Contains(searchTerm))
+                .ToList();
+
+            CreatePokemonSlots();
+        }
+
+        private void ClearSearch()
+        {
+            SearchInput.value = string.Empty;
         }
     }
 }

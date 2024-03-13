@@ -7,7 +7,6 @@ namespace UniDex.Menus
 {
     public class DetailsMenu : Menu
     {
-        [Header("UI")]
         [SerializeField]
         private PokemonDetailsDocumentController documentController;
 

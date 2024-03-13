@@ -28,6 +28,13 @@ Scroller * {
     justify-content: center;
 }
 
+.unity-text-field__input
+{
+    background-color: white;
+    border-width: 0px;
+    border-radius: 4px;
+}
+
 PokemonSlot {
     border-width: 2px;
     margin: 4px;
@@ -45,4 +52,8 @@ PokemonSlot {
 
 PokemonSlot:hover {
     border-color: rgba(0, 0, 0, 0.8);
+}
+
+PokemonSlot Image {
+    flex-grow: 1;
 }
