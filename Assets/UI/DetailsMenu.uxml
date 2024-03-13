@@ -27,7 +27,7 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                     <ui:Label tabindex="-1" text="Description" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DescriptionLabel" style="font-size: 24px; flex-grow: 0; -unity-font-style: bold;" />
-                    <ui:Label tabindex="-1" text="Description text&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PokemonDescription" style="font-size: 16px; flex-grow: 0; -unity-font-style: normal;" />
+                    <ui:Label tabindex="-1" text="Description text&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PokemonDescription" style="font-size: 16px; flex-grow: 0; -unity-font-style: normal; flex-wrap: wrap; white-space: normal;" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

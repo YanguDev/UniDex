@@ -22,7 +22,7 @@ namespace UniDex.Pokemons
         {
             ID = pokemon.id;
             Name = species.names.FirstOrDefault(name => name.language.name == "en").name;
-            FlavorText = species.flavor_text_entries.FirstOrDefault(entry => entry.language.name == "en").flavor_text;
+            FlavorText = species.flavor_text_entries.FirstOrDefault(entry => entry.language.name == "en").flavor_text.Replace("\n", " ").Replace("", " ");
             Genus = species.genera.FirstOrDefault(genus => genus.language.name == "en").genus;
             Weight = $"{(float) pokemon.weight / 100} kg";
             Height = $"{(float) pokemon.height / 10} m";

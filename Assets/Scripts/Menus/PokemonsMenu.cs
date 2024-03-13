@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UniDex.Pokemons;
 using UniDex.UI;
@@ -15,6 +16,7 @@ namespace UniDex.Menus
         [SerializeField]
         private string pokemonContainerElementID = "PokemonContainer";
 
+        private List<PokemonObject> filteredPokemons;
         private Dictionary<PokemonObject, PokemonSlot> pokemonSlots = new Dictionary<PokemonObject, PokemonSlot>();
 
         private VisualElement PokemonContainerElement => uiDocument.rootVisualElement.Q(pokemonContainerElementID);
@@ -27,6 +29,11 @@ namespace UniDex.Menus
             while (!PokemonManager.Instance.IsPokemonFetchCompleted)
             {
                 await Task.Yield();
+            }
+
+            if (filteredPokemons == null)
+            {
+                filteredPokemons = PokemonManager.Instance.AllPokemons.Values.ToList();
             }
 
             CreatePokemonSlots();
@@ -42,7 +49,7 @@ namespace UniDex.Menus
 
         private void CreatePokemonSlots()
         {
-            foreach (PokemonObject pokemonObject in PokemonManager.Instance.AllPokemons.Values)
+            foreach (PokemonObject pokemonObject in filteredPokemons)
             {
                 var pokemonSlot = new PokemonSlot(pokemonObject, OpenPokemonDetails);
                 PokemonContainerElement.Add(pokemonSlot);
@@ -61,8 +68,9 @@ namespace UniDex.Menus
 
         private void OpenPokemonDetails(PokemonObject pokemonObject)
         {
-            MenuManager.Instance.SwitchMenu<DetailsMenu>()
-                .SetPokemonDetails(pokemonObject);
+            DetailsMenu detailsMenu = MenuManager.Instance.SwitchMenu<DetailsMenu>();
+            detailsMenu.SetPokemonDetails(pokemonObject);
+            detailsMenu.SetPokemonsContext(filteredPokemons, filteredPokemons.IndexOf(pokemonObject));
         }
     }
 }
