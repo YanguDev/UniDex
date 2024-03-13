@@ -35,6 +35,18 @@ Scroller * {
     border-radius: 4px;
 }
 
+#ExitButton {
+    background-color: red;
+}
+
+#ExitButton:hover {
+    background-color: #EA8181;
+}
+
+#LeftButton:hover, #RightButton:hover {
+    -unity-background-image-tint-color: white;
+}
+
 PokemonSlot {
     border-width: 2px;
     margin: 4px;
