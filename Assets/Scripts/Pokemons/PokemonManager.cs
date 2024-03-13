@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -28,6 +29,9 @@ namespace UniDex.Pokemons
         /// </summary>
         public bool IsPokemonFetchCompleted { get; private set; }
 
+        public event Action<int, int> OnPokemonFetchingProgressChanged;
+        public event Action OnPokemonFetchCompleted;
+
         protected override async void Awake()
         {
             base.Awake();
@@ -49,7 +53,6 @@ namespace UniDex.Pokemons
                 for (int i = 0; i < apiCallsAmount; i++)
                 {
                     int pokemonIndex = throttle * maxSimultaneousAPICalls + i;
-                    Debug.Log($"Getting pokemon {pokemonIndex}");
                     pokemonObjectsTasks[i] = PokemonFactory.CreatePokemonFromAPI(pokemonList[pokemonIndex].name);
                 }
 
@@ -64,9 +67,11 @@ namespace UniDex.Pokemons
                     allPokemons.Add(pokemon.ID, pokemon);
                 }
 
+                OnPokemonFetchingProgressChanged?.Invoke(allPokemons.Count, pokemonList.Length);
             }
 
             IsPokemonFetchCompleted = true;
+            OnPokemonFetchCompleted?.Invoke();
         }
     }
 }

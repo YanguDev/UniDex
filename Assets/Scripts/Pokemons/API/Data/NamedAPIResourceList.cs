@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace UniDex.Pokemons.API.Data
 {
     public struct NamedAPIResourceList

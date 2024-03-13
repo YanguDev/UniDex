@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniDex.Pokemons;
-using UniDex.Pokemons.API;
 using UniDex.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,8 +16,10 @@ namespace UniDex.Menus
 
         private VisualElement PokemonContainerElement => uiDocument.rootVisualElement.Q(pokemonContainerElementID);
 
-        private async void OnEnable()
+        public override async void Open()
         {
+            base.Open();
+            
             while (!PokemonManager.Instance.IsPokemonFetchCompleted)
             {
                 await Task.Yield();

@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UniDex.Patterns;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace UniDex.Menus
@@ -31,13 +28,17 @@ namespace UniDex.Menus
             }
 
             T newMenu = GetMenu<T>();
-            if (newMenu == null)
+            if (!newMenu)
             {
                 throw new SystemException($"Couldn't find menu of type {typeof(T)}");
             }
 
-            newMenu.Open();
-            currentMenu = newMenu;
+            if (currentMenu != newMenu)
+            {
+                newMenu.Open();
+                currentMenu = newMenu;
+            }
+
             return newMenu;
         }
 
@@ -48,17 +49,19 @@ namespace UniDex.Menus
 
         private void Initialize()
         {
-            menus = GetComponentsInChildren<Menu>();
+            menus = GetComponentsInChildren<Menu>(true);
 
             foreach (Menu menu in menus)
             {
-                if (menu != initialMenu)
-                {
-                    menu.gameObject.SetActive(false);
-                }
+                menu.gameObject.SetActive(false);
             }
 
             currentMenu = initialMenu;
+
+            if (currentMenu)
+            {
+                currentMenu.Open();
+            }
         }
     }
 }
