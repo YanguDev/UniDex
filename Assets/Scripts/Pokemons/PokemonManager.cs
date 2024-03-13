@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using UniDex.Patterns;
 using UniDex.Pokemons.API;
@@ -29,7 +30,13 @@ namespace UniDex.Pokemons
         /// </summary>
         public bool IsPokemonFetchCompleted { get; private set; }
 
+        /// <summary>
+        /// Event called when one pack of simultaneous API calls is finished. Provides amount of currently loaded Pokemons, and total Pokemons to load.
+        /// </summary>
         public event Action<int, int> OnPokemonFetchingProgressChanged;
+        /// <summary>
+        /// Event called when all Pokemons are fetched successfully.
+        /// </summary>
         public event Action OnPokemonFetchCompleted;
 
         protected override async void Awake()
@@ -40,7 +47,7 @@ namespace UniDex.Pokemons
 
             if (pokemonListResult.IsError)
             {
-                throw new System.Exception(pokemonListResult.Error);
+                throw new Exception(pokemonListResult.Error);
             }
 
             NamedAPIResource[] pokemonList = pokemonListResult.Data.results;

@@ -10,6 +10,8 @@ namespace UniDex.Menus
         [SerializeField]
         private PokemonDetailsDocumentController documentController;
 
+        private PokemonObject lastPokemonObject;
+
         public override void Open()
         {
             base.Open();
@@ -24,11 +26,13 @@ namespace UniDex.Menus
 
         private void Exit()
         {
-            MenuManager.Instance.SwitchMenu<PokemonsMenu>();
+            MenuManager.Instance.SwitchMenu<PokemonsMenu>()
+                .ScrollTo(lastPokemonObject);
         }
 
         public void SetPokemonDetails(PokemonObject pokemonObject)
         {
+            lastPokemonObject = pokemonObject;
             documentController.PokemonID.text = pokemonObject.ID.ToString();
             documentController.PokemonName.text = pokemonObject.Name;
             documentController.PokemonImage.image = pokemonObject.Texture;
