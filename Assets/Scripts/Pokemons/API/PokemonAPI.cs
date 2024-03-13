@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using UniDex.Pokemons.API.Data;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace UniDex.Pokemons.API
@@ -65,8 +66,8 @@ namespace UniDex.Pokemons.API
                 {
                     return new PokemonAPIResult<T>(webRequest.error);
                 }
-
-                return new PokemonAPIResult<T>(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text));
+                
+                return new PokemonAPIResult<T>(JsonUtility.FromJson<T>(webRequest.downloadHandler.text));
             }
         }
 

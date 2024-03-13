@@ -1,5 +1,6 @@
 namespace UniDex.Pokemons.API.Data
 {
+    [System.Serializable]
     public struct NamedAPIResourceList
     {
         /// <summary>

@@ -17,13 +17,12 @@ namespace UniDex.Pokemons
             }
 
             Pokemon pokemon = pokemonResult.Data;
-
             var pokemonSpeciesTask = PokemonAPI.GetPokemonSpecies(pokemon);
             string spriteURL = pokemon.sprites.front_default;
             Task<Texture> textureTask = null;
             if (!string.IsNullOrEmpty(spriteURL))
             {
-                textureTask = TextureDownloader.DownloadFromURL(pokemon.sprites.front_default);
+                textureTask = TextureDownloader.DownloadFromURL(spriteURL);
             }
 
             if (textureTask != null)

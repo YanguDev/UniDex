@@ -1,5 +1,6 @@
 namespace UniDex.Pokemons.API.Data
 {
+    [System.Serializable]
     public class Pokemon
     {
         public int id;
@@ -9,12 +10,14 @@ namespace UniDex.Pokemons.API.Data
         public PokemonSprites sprites;
         public PokemonSpecies species;
 
+        [System.Serializable]
         public struct PokemonSprites
         {
             public string front_default;
             public string front_shiny;
         }
 
+        [System.Serializable]
         public struct PokemonSpecies
         {
             public string name;
