@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a88d1adca7a3b0b4f9305690aea3720c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  limit: 200
-  maxSimultaneousAPICalls: 100
+  limit: 10000
+  maxSimultaneousAPICalls: 30
   defaultPokemonTexture: {fileID: 2800000, guid: 2185d6b077371e34fa598c38e457cc62, type: 3}
 --- !u!4 &302858368
 Transform:

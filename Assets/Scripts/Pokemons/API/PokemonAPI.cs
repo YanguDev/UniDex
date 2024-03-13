@@ -66,9 +66,7 @@ namespace UniDex.Pokemons.API
                     return new PokemonAPIResult<T>(webRequest.error);
                 }
 
-                string json = webRequest.downloadHandler.text;
-                T data = JsonConvert.DeserializeObject<T>(json);
-                return new PokemonAPIResult<T>(data);
+                return new PokemonAPIResult<T>(JsonConvert.DeserializeObject<T>(webRequest.downloadHandler.text));
             }
         }
 
