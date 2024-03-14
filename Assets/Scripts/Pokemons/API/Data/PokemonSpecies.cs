@@ -7,6 +7,7 @@ namespace UniDex.Pokemons.API.Data
         public Name[] names;
         public FlavorText[] flavor_text_entries;
         public Genus[] genera;
+        public NamedAPIResource color;
         
         [System.Serializable]
         public struct FlavorText

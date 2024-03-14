@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a286b6244853e24480951a965d76d68, type: 3}
+  m_Name: PokemonColors
+  m_EditorClassIdentifier: 
+  <Black>k__BackingField: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+  <Blue>k__BackingField: {r: 0.36040404, g: 0.62172836, b: 0.8396226, a: 1}
+  <Brown>k__BackingField: {r: 0.8584906, g: 0.31773436, b: 0.17412782, a: 1}
+  <Gray>k__BackingField: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  <Green>k__BackingField: {r: 0.38047346, g: 0.8490566, b: 0.5271992, a: 1}
+  <Pink>k__BackingField: {r: 0.8584906, g: 0.56287825, b: 0.8364376, a: 1}
+  <Purple>k__BackingField: {r: 0.7264151, g: 0.28439835, b: 0.71049374, a: 1}
+  <Red>k__BackingField: {r: 0.8773585, g: 0.26072446, b: 0.26072446, a: 1}
+  <White>k__BackingField: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
+  <Yellow>k__BackingField: {r: 1, g: 0.83136547, b: 0.33490568, a: 1}

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UniDex.Colors;
 using UniDex.Pokemons.API;
 using UniDex.Pokemons.API.Data;
 using UnityEngine;
@@ -46,12 +47,32 @@ namespace UniDex.Pokemons
                 pokemonTexture.filterMode = FilterMode.Point;
             }
 
-            return new PokemonObject(pokemon, pokemonSpecies, pokemonTexture);
+            NamedColor namedColor = GetNamedColorFromAPIColor(pokemonSpecies);
+
+            return new PokemonObject(pokemon, pokemonSpecies, pokemonTexture, namedColor);
         }
 
         public static async Task<PokemonObject> CreatePokemonFromAPI(uint pokemonID)
         {
             return await CreatePokemonFromAPI(pokemonID.ToString());
-        } 
+        }
+
+        private static NamedColor GetNamedColorFromAPIColor(PokemonSpecies pokemonSpecies)
+        {
+            return pokemonSpecies.color.name switch
+            {
+                "black" => NamedColor.Black,
+                "blue" => NamedColor.Blue,
+                "brown" => NamedColor.Brown,
+                "gray" => NamedColor.Gray,
+                "green" => NamedColor.Green,
+                "pink" => NamedColor.Pink,
+                "purple" => NamedColor.Purple,
+                "red" => NamedColor.Red,
+                "white" => NamedColor.White,
+                "yellow" => NamedColor.Yellow,
+                _ => NamedColor.White
+            };
+        }
     }
 }

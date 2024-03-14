@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UniDex.Colors;
 using UniDex.Pokemons;
 using UniDex.UI.DocumentControllers;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace UniDex.Menus
     {
         [SerializeField]
         private PokemonDetailsDocumentController documentController;
+        [SerializeField]
+        private NamedColorValues pokemonColorValues;
 
         private PokemonObject lastPokemonObject;
         private List<PokemonObject> currentPokemonsContext;
@@ -43,6 +46,7 @@ namespace UniDex.Menus
             documentController.PokemonGenus.text = pokemonObject.Genus;
             documentController.PokemonWeight.text = pokemonObject.Weight;
             documentController.PokemonHeight.text = pokemonObject.Height;
+            documentController.Header.style.backgroundColor = pokemonColorValues.GetColorFromNamedColor(pokemonObject.NamedColor);
         }
 
         public void SetPokemonsContext(List<PokemonObject> pokemonsContext, int currentIndex)

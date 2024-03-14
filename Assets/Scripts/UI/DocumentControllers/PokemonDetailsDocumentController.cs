@@ -8,6 +8,8 @@ namespace UniDex.UI.DocumentControllers
         [SerializeField]
         private UIDocument pokemonDetailsDocument;
 
+        public VisualElement Header => Root.Q(nameof(Header));
+
         public Label PokemonID => Root.Q<Label>(nameof(PokemonID));
         public Label PokemonName => Root.Q<Label>(nameof(PokemonName));
         public Label PokemonGenus => Root.Q<Label>(nameof(PokemonGenus));
