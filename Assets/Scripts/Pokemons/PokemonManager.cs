@@ -76,6 +76,8 @@ namespace UniDex.Pokemons
                     }
 
                     PokemonObject[] pokemons = await Task.WhenAll(pokemonObjectsTasks);
+                    if (destroyCancellationToken.IsCancellationRequested) return;
+
                     foreach (PokemonObject pokemon in pokemons)
                     {
                         if (!pokemon.Texture)
