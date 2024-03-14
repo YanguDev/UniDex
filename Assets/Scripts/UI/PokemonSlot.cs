@@ -17,6 +17,7 @@ namespace UniDex.UI
         {
             Image = this.AddChild(new Image());
             Name = this.AddChild(new Label(pokemonObject.Name));
+            name = $"{pokemonObject.Name}-Slot";
 
             Image.scaleMode = ScaleMode.ScaleToFit;
             Image.image = pokemonObject.Texture;
