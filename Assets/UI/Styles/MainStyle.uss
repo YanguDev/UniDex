@@ -1,17 +1,29 @@
-.unity-scroller__low-button, .unity-scroller__high-button {
-    width: 0px;
-    height: 0px;
+.unity-scroller__low-button {
+    width: 0;
+    height: 0;
 }
 
-.unity-scroller__slider, .unity-base-slider__dragger {
-    margin: 0px;
+.unity-scroller__high-button {
+    width: 0;
+    height: 0;
+}
+
+.unity-scroller__slider {
+    margin: 0;
     width: 100%;
-    min-width: 0px;
+    min-width: 0;
+    border-radius: 4px;
+}
+
+.unity-base-slider__dragger {
+    margin: 0;
+    width: 100%;
+    min-width: 0;
     border-radius: 4px;
 }
 
 .unity-base-slider__tracker {
-    width: 0px;
+    width: 0;
 }
 
 Scroller {
@@ -19,7 +31,7 @@ Scroller {
 }
 
 Scroller * {
-    border-width: 0px;
+    border-width: 0;
 }
 
 #PokemonContainer #unity-content-container {
@@ -28,10 +40,9 @@ Scroller * {
     justify-content: center;
 }
 
-.unity-text-field__input
-{
+.unity-text-field__input {
     background-color: white;
-    border-width: 0px;
+    border-width: 0;
     border-radius: 4px;
 }
 
@@ -40,11 +51,7 @@ Scroller * {
 }
 
 #ExitButton:hover {
-    background-color: #EA8181;
-}
-
-#LeftButton:hover, #RightButton:hover {
-    -unity-background-image-tint-color: white;
+    background-color: rgb(234, 129, 129);
 }
 
 PokemonSlot {

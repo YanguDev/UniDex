@@ -31,21 +31,23 @@ namespace UniDex.UI
 
         public void InitializeVisibility()
         {
-            int index = 0;
             int? firstVisibleIndex = null;
             int? lastVisibleIndex = null;
             for (int i = 0; i < ScrollView.childCount; i++)
             {
                 VisualElement element = ScrollView.contentContainer[i];
-                if (!IsElementVisible(element))
+                if (IsElementVisible(element))
                 {
-                    element.visible = false;
-                    lastVisibleIndex ??= index - 1;
+                    firstVisibleIndex ??= i;
+                    element.visible = true;
                 }
                 else
                 {
-                    firstVisibleIndex ??= index;
-                    element.visible = true;
+                    element.visible = false;
+                    if (firstVisibleIndex != null)
+                    {
+                        lastVisibleIndex ??= i - 1;
+                    }
                 }
             }
 

@@ -233,6 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 378175761}
+  scrollViewCulling: {fileID: 378175764}
 --- !u!114 &378175764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +247,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiDocument: {fileID: 378175761}
-  scrollViewID: 
   cullingPadding: 800
 --- !u!1 &463252076
 GameObject:

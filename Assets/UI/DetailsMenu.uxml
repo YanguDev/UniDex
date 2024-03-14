@@ -32,6 +32,6 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="RightButton" style="margin-top: 0; margin-right: 16px; margin-bottom: 0; margin-left: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(188, 188, 188, 0); width: 64px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-image: url(&apos;project://database/Assets/Art/Sprites/Chevron.png?fileID=21300000&amp;guid=4ea62070f82fd914eb0049c864a411aa&amp;type=3#Chevron&apos;); -unity-background-scale-mode: scale-to-fit; rotate: 180deg; -unity-background-image-tint-color: rgb(231, 231, 231); transition-duration: 2s;" />
+        <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="RightButton" style="margin-top: 0; margin-right: 16px; margin-bottom: 0; margin-left: 16px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(188, 188, 188, 0); width: 64px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; background-image: url(&apos;project://database/Assets/Art/Sprites/Chevron.png?fileID=21300000&amp;guid=4ea62070f82fd914eb0049c864a411aa&amp;type=3#Chevron&apos;); -unity-background-scale-mode: scale-to-fit; rotate: 180deg; -unity-background-image-tint-color: rgb(231, 231, 231);" />
     </ui:VisualElement>
 </ui:UXML>

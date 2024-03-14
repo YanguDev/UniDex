@@ -69,12 +69,16 @@ namespace UniDex.Menus
 
         private void NextPokemon()
         {
+            if (!documentController.RightButton.visible) return;
+
             SetPokemonDetails(currentPokemonsContext[++currentContextIndex]);
             RefreshNavigationButtons();
         }
 
         private void PreviousPokemon()
         {
+            if (!documentController.LeftButton.visible) return;
+
             SetPokemonDetails(currentPokemonsContext[--currentContextIndex]);
             RefreshNavigationButtons();
         }

@@ -12,6 +12,8 @@ namespace UniDex.Menus
     {
         [SerializeField]
         private UIDocument uiDocument;
+        [SerializeField]
+        private ScrollViewCulling scrollViewCulling;
 
         private string searchTerm;
         private List<PokemonObject> filteredPokemons;
@@ -48,7 +50,10 @@ namespace UniDex.Menus
             if (!pokemonSlots.TryGetValue(pokemonObject, out PokemonSlot pokemonSlot)) return;
 
             // Need to wait for UI Toolkit Layout to be initialized first
-            CoroutinesUtility.DelayByFrame(this, () => ScrollView.ScrollTo(pokemonSlot));
+            CoroutinesUtility.DelayByFrame(this, () => {
+                ScrollView.ScrollTo(pokemonSlot);
+                scrollViewCulling.InitializeVisibility();
+            });
         }
 
         private void CreatePokemonSlots()
