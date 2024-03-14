@@ -58,7 +58,7 @@ namespace UniDex.Menus
 
         private void CreatePokemonSlots()
         {
-            PokemonContainer.Clear();
+            PokemonContainer.contentContainer.Clear();
             foreach (PokemonObject pokemonObject in filteredPokemons)
             {
                 var pokemonSlot = new PokemonSlot(pokemonObject, OpenPokemonDetails);
@@ -73,6 +73,8 @@ namespace UniDex.Menus
                     pokemonSlots[pokemonObject] = pokemonSlot;
                 }
             }
+
+            CoroutinesUtility.DelayByFrame(this, scrollViewCulling.InitializeVisibility);
         }
 
         private void OpenPokemonDetails(PokemonObject pokemonObject)

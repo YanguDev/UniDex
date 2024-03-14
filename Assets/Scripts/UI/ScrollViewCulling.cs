@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +32,18 @@ namespace UniDex.UI
 
         public void InitializeVisibility()
         {
+            // Force rebuild ScrollView size
+            ScrollView.schedule.Execute(() => {
+                var fakeOldRect = Rect.zero;
+                var fakeNewRect = ScrollView.layout;
+
+                using (var ev = GeometryChangedEvent.GetPooled(fakeOldRect, fakeNewRect))
+                {
+                    ev.target = ScrollView.contentContainer;
+                    ScrollView.contentContainer.SendEvent(ev);
+                }
+            });
+
             int? firstVisibleIndex = null;
             int? lastVisibleIndex = null;
             for (int i = 0; i < ScrollView.childCount; i++)
@@ -51,12 +64,29 @@ namespace UniDex.UI
                 }
             }
 
-            this.firstVisibleIndex = firstVisibleIndex.Value;
-            this.lastVisibleIndex = lastVisibleIndex.Value;
+            if (firstVisibleIndex != null)
+            {
+                this.firstVisibleIndex = firstVisibleIndex.Value;
+            }
+            else
+            {
+                this.firstVisibleIndex = 0;
+            }
+
+            if (lastVisibleIndex != null)
+            {
+                this.lastVisibleIndex = lastVisibleIndex.Value;
+            }
+            else
+            {
+                this.lastVisibleIndex = ScrollView.childCount - 1;
+            }
         }
 
         private void UpdateVisibility()
         {
+            if (ScrollView.childCount == 0) return;
+
             // Check if elements before first index are now visible
             bool firstIndexChanged = false;
             for (int i = Mathf.Max(0, firstVisibleIndex - 1); i >= 0; i--)
