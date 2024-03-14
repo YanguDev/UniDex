@@ -20,20 +20,12 @@ namespace UniDex.Menus
         public override void Open()
         {
             base.Open();
+
             documentController.ExitButton.clicked += Exit;
             documentController.LeftButton.clicked += PreviousPokemon;
             documentController.RightButton.clicked += NextPokemon;
 
             RefreshNavigationButtons();
-        }
-
-        public override void Close()
-        {
-            documentController.ExitButton.clicked -= Exit;
-            documentController.LeftButton.clicked -= PreviousPokemon;
-            documentController.RightButton.clicked -= NextPokemon;
-
-            base.Close();
         }
 
         public void SetPokemonDetails(PokemonObject pokemonObject)
